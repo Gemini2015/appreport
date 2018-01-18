@@ -23,8 +23,11 @@ coverage
 build/Release
 
 # Dependency directory
-# https://docs.npmjs.com/cli/shrinkwrap#caveats
+# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git-
 node_modules
 
 # Debug log from npm
 npm-debug.log
+
+# for macos
+.DS_Store
