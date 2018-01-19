@@ -1,19 +1,18 @@
 const router = require('koa-router')()
+var AppPackage = require('../models/app_package')
 
 router.get('/', async (ctx, next) => {
-  await ctx.render('index', {
-    title: 'Hello Koa 2!'
-  })
+	await ctx.render('index', {
+		title: 'App Report',
+	})
 })
 
-router.get('/string', async (ctx, next) => {
-  ctx.body = 'koa2 string'
-})
-
-router.get('/json', async (ctx, next) => {
-  ctx.body = {
-    title: 'koa2 json'
-  }
+router.post('/refresh', async (ctx, next) => {
+	var packages = await AppPackage.findAll()
+	ctx.body = JSON.stringify({
+		packages: packages,
+		result: 0
+	})
 })
 
 module.exports = router
