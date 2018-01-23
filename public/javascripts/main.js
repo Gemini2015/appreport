@@ -25,7 +25,9 @@ function refreshCanvas(packages)
             formatter: function (params) {
                 var param = params[0];
                 var package = param.value[2];
-                return package.time + ' : ' + Math.round(package.size / 1000) + 'KB \n' + package.version;
+                var t = new Date(Date.parse(package.time));
+                var timestr = t.getFullYear() + '/' + (t.getMonth() + 1) + '/' + (t.getDate() + 1) + ' ' + t.getHours() + ':' + t.getMinutes();
+                return package.project_code + ' ' + package.platform + ' ' + timestr + ' ' + Math.round(package.size / 1000) + 'KB ' + package.version;
             },
             axisPointer: {
                 animation: false
@@ -44,38 +46,67 @@ function refreshCanvas(packages)
                 show: true
             }
         },
+        // dataZoom: [
+        //     {   // 这个dataZoom组件，默认控制x轴。
+        //         type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+        //         start: 0,      // 左边在 10% 的位置。
+        //         end: 100,         // 右边在 60% 的位置。
+        //         xAxisIndex: 0,
+        //     },
+        //     {   // 这个dataZoom组件，也控制x轴。
+        //         type: 'inside', // 这个 dataZoom 组件是 inside 型 dataZoom 组件
+        //         start: 0,      // 左边在 10% 的位置。
+        //         end: 100,         // 右边在 60% 的位置。
+        //         xAxisIndex: 0,
+        //     },
+        //     {   // 这个dataZoom组件，默认控制x轴。
+        //         type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+        //         start: 10,      // 左边在 10% 的位置。
+        //         end: 80,         // 右边在 60% 的位置。
+        //         yAxisIndex: 0,
+        //     },
+        //     {   // 这个dataZoom组件，也控制x轴。
+        //         type: 'inside', // 这个 dataZoom 组件是 inside 型 dataZoom 组件
+        //         start: 10,      // 左边在 10% 的位置。
+        //         end: 80,         // 右边在 60% 的位置。
+        //         yAxisIndex: 0,
+        //     }
+        // ],
         series: series,
     };
 
-    var iosData = []
-    var androidData = []
+    var dic = {}
     for(var i = 0; i < packages.length; i++)
     {
         var package = packages[i];
-        if(package.platform == 'ios')
+        var platform = package.platform;
+        var projectCode = package.project_code;
+        if(dic[projectCode] == null)
         {
-            iosData.push(processPackageData(package));
+            dic[projectCode] = {}
         }
-        else
+        var pdic = dic[projectCode];
+        if(pdic[platform] == null)
         {
-            androidData.push(processPackageData(package));
+            pdic[platform] = [];
+        }
+        pdic[platform].push(processPackageData(package));
+    }
+
+    for(var key in dic)
+    {
+        var pdic = dic[key];
+        for(var pkey in pdic)
+        {
+            series.push({
+                name: key + '-' + pkey,
+                type: 'line',
+                // showSymbol: false,
+                // hoverAnimation: false,
+                data: pdic[pkey],
+            });
         }
     }
-    series.push({
-        name: 'iOS',
-        type: 'line',
-        showSymbol: false,
-        hoverAnimation: false,
-        data: iosData,
-    });
-
-    series.push({
-        name: 'Android',
-        type: 'line',
-        showSymbol: false,
-        hoverAnimation: false,
-        data: androidData
-    });
 
     myChart.setOption(option);
 }
