@@ -108,7 +108,7 @@ function refreshCanvas(packages)
         }
     }
 
-    myChart.setOption(option);
+    myChart.setOption(option, true, false);
 }
 
 $(function() {

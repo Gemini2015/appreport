@@ -6,8 +6,14 @@ block content
 			form#query-form
 				.col-md-3
 					select.form-control(name='platform')
-						option(value='ios') iOS
-						option(value='android') Android
+						option(value='') All
+						each platform in platforms
+							option(value=platform.platform)=platform.platform
+				.col-md-3
+					select.form-control(name='project_code')
+						option(value='') All
+						each projectCode in projectCodes
+							option(value=projectCode.project_code)=projectCode.project_code
 				.col-md-1
 					a#refresh-btn.btn(class=`btn-primary`, href='#', role="button") Refresh
 		.row
