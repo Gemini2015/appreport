@@ -21,3 +21,4 @@ curl -d "commit_version=1&platform=android&size=100&version=0.0.1" `appreport_ip
 
 ## Example
 
+![appreport_example](https://dn-ztgame.qbox.me/appreport_example.png)
